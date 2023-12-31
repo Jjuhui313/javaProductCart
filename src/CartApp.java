@@ -1,16 +1,14 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CartApp {
     public static void main(String[] args) {
         // 상품 목록 생성
-        Set<Product> productSet = new HashSet<>();
+        Set<Product> productSet = readProductsCSV("products.csv");
         // TODO: 상품 클래스를 생성하여 상품목록에 넣는다.
-
-        productSet.add(new Product("우유", 1000));
-        productSet.add(new Product("우유", 1000));
-        productSet.add(new Product("계란", 3000));
-        productSet.add(new Product("사과", 900));
 
         // 상품 목록 확인
         System.out.println("고유한 상품 목록:");
@@ -40,5 +38,23 @@ public class CartApp {
 
 
 
+    }
+
+    public static Set<Product> readProductsCSV(String filePath) {
+        Set<Product> products = new HashSet<>();
+        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while((line = br.readLine()) != null) {
+                String[] datas = line.split(",");
+                if(datas.length == 2) {
+                    String name = datas[0].trim();
+                    int price = Integer.parseInt(datas[1].trim());
+                    products.add(new Product(name, price));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return products;
     }
 }
